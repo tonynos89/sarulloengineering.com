@@ -15,21 +15,21 @@ Il sito è scritto a mano in HTML, CSS e JavaScript puri: nessun framework, ness
 ├── robots.txt
 ├── sitemap.xml         Include i collegamenti hreflang tra le lingue
 ├── it/                 Versione italiana
-│   ├── index.html      Home a pagina unica: hero, chi sono, cosa faccio, software, contatti
+│   ├── index.html      Home a pagina unica: hero, chi sono, competenze, passioni, contatti
 │   └── privacy.html
 ├── en/                 Versione inglese (stessi file)
 ├── ru/                 Versione russa (stessi file)
 └── assets/
     ├── css/style.css   Unico foglio di stile per tutte le pagine
     ├── js/main.js      Lingua scelta, anno nel footer
-    ├── js/neural.js    Animazione della rete neurale nell'hero (canvas, senza librerie)
+    ├── js/lattice.js   Animazione dell'hero: reticolo → rete neurale → logo (canvas, senza librerie)
     ├── fonts/          Commissioner (latino + cirillico), ospitato sul sito, licenza OFL
     └── img/            logo.svg, favicon.svg
 ```
 
 ## Regole di lavoro
 
-- **Ogni modifica di contenuto va fatta in tutte e tre le lingue**: `it/`, `en/`, `ru/` hanno la stessa struttura HTML, cambiano solo i testi. Gli `id` delle sezioni (`#about`, `#services`, `#software`, `#contact`) sono uguali ovunque.
+- **Ogni modifica di contenuto va fatta in tutte e tre le lingue**: `it/`, `en/`, `ru/` hanno la stessa struttura HTML, cambiano solo i testi. Gli `id` delle sezioni (`#about`, `#skills`, `#passions`, `#contact`) sono uguali ovunque.
 - **Una nuova pagina** si crea in tutte e tre le cartelle, con i tag `hreflang` aggiornati, e si aggiunge a `sitemap.xml`.
 - **Percorsi assoluti** (`/assets/...`): per provare il sito in locale serve un piccolo server, non basta aprire il file con doppio clic:
   ```
@@ -57,4 +57,4 @@ Il sito è scritto a mano in HTML, CSS e JavaScript puri: nessun framework, ness
 - [ ] Far rileggere i testi russi da un madrelingua
 - [ ] Far verificare l'informativa privacy
 - [ ] Immagine di anteprima per i social (`og:image`, 1200×630)
-- [ ] Foto professionale per la sezione "Chi sono" (facoltativa)
+- [ ] Foto per la sezione "Chi sono": salvarla come `assets/img/foto.jpg` e sostituire il logo nella `figure.portrait` delle tre home (istruzione nel commento HTML)
