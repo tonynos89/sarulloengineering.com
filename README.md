@@ -52,7 +52,7 @@ Il sito è scritto a mano in HTML, CSS e JavaScript puri: nessun framework, ness
 
 - [ ] Partita IVA nel footer delle tre home (obbligatoria se presente) — cercare `TODO`
 - [ ] Link al profilo LinkedIn nella sezione contatti — cercare `TODO`
-- [ ] Attivare la casella `info@sarulloengineering.com` (o cambiare l'indirizzo in tutte le pagine)
+- [ ] Attivare la casella `antonino@sarulloengineering.com`
 - [ ] Rifinire il logo: la stella in un solo tratto deve suggerire la A e la S
 - [ ] Far rileggere i testi russi da un madrelingua
 - [ ] Far verificare l'informativa privacy
