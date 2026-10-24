@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none" stroke="#182016" stroke-width="4" stroke-linejoin="round" stroke-linecap="round">
+  <title>Sarullo Engineering</title>
+  <!-- Esagono (punta in alto) -->
+  <path d="M50 4 L89.84 27 L89.84 73 L50 96 L10.16 73 L10.16 27 Z"/>
+  <!-- Stella a cinque punte tracciata in un solo tratto: la punta in alto disegna la A.
+       BOZZA: da rifinire perché il tratto suggerisca anche la S. -->
+  <path d="M50 16 L71.16 81.12 L15.76 40.88 L84.24 40.88 L28.84 81.12 Z"/>
+</svg>

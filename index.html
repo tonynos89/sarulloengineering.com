@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sarullo Engineering</title>
+  <meta name="robots" content="noindex, follow">
+  <link rel="alternate" hreflang="it" href="https://sarulloengineering.com/it/">
+  <link rel="alternate" hreflang="en" href="https://sarulloengineering.com/en/">
+  <link rel="alternate" hreflang="ru" href="https://sarulloengineering.com/ru/">
+  <link rel="alternate" hreflang="x-default" href="https://sarulloengineering.com/en/">
+  <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <script>
+    // Sceglie la lingua: prima quella scelta dal visitatore, poi quella del browser.
+    (function () {
+      var supported = ['it', 'en', 'ru'];
+      var lang = null;
+      try { lang = localStorage.getItem('se-lang'); } catch (e) {}
+      if (supported.indexOf(lang) === -1) {
+        var prefs = navigator.languages || [navigator.language || 'en'];
+        for (var i = 0; i < prefs.length && !lang; i++) {
+          var code = String(prefs[i]).slice(0, 2).toLowerCase();
+          if (supported.indexOf(code) !== -1) lang = code;
+        }
+      }
+      if (supported.indexOf(lang) === -1) lang = 'en';
+      location.replace('/' + lang + '/' + location.hash);
+    })();
+  </script>
+  <style>
+    body { font-family: system-ui, sans-serif; background: #182016; color: #ECEFE8; display: grid; place-items: center; min-height: 100vh; margin: 0; }
+    a { color: #C2CF3A; margin: 0 .75rem; font-size: 1.125rem; }
+  </style>
+</head>
+<body>
+  <p>
+    <a href="/it/" hreflang="it" lang="it">Italiano</a>
+    <a href="/en/" hreflang="en" lang="en">English</a>
+    <a href="/ru/" hreflang="ru" lang="ru">Русский</a>
+  </p>
+</body>
+</html>
