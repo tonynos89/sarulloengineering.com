@@ -2,7 +2,8 @@
    Animazione dell'hero: "dagli atomi agli algoritmi".
    1. Un reticolo cristallino esagonale (fogli di grafite) ruota nello spazio.
    2. Gli atomi si staccano e formano una rete neurale a strati, con segnali.
-   3. I nodi convergono e disegnano il logo, come un tratto di penna.
+   3. I nodi convergono e disegnano il logo (bullone e stella AS), come un
+      tratto di penna; poi il logo vero compare nitido al loro posto.
    Canvas 2D con proiezione prospettica scritta a mano, nessuna libreria.
    Si ferma quando non è visibile e rispetta "riduci movimento".
    ========================================================================== */
@@ -14,7 +15,25 @@
   var ctx = canvas.getContext("2d");
   var hero = canvas.parentNode;
 
-  var ICE = "155,231,238", BRASS = "226,179,92";
+  // Colori del marchio: navy, argento, ardesia, bianco; ottone solo per le scintille
+  var ICE = "214,222,232", BRASS = "226,179,92";
+  var SILVER = "195,202,211", SLATE = "86,102,148", WHITE = "242,244,247";
+
+  // Geometria del logo: gli stessi numeri dei file SVG (viewBox del marchio),
+  // portati in unità della scena con centro nel centro del bullone.
+  var LC = [967, 1058], LU = 1110;
+  function star(p) { return [(967 + 0.9 * (p[0] - 967) - LC[0]) / LU, (1013 + 0.9 * (p[1] - 1013) - LC[1]) / LU]; }
+  function hexPts(rc) {
+    var out = [];
+    for (var i = 0; i < 6; i++) out.push([Math.sin(i * Math.PI / 3) * rc / LU, -Math.cos(i * Math.PI / 3) * rc / LU]);
+    return out;
+  }
+  var LOGO = {
+    rest: [[783.3, 760.2], [189, 760.2], [1447.8, 1674.8], [1264.2, 1109.6]].map(star),
+    legs: [[669.8, 1109.6], [967, 195], [1264.2, 1109.6]].map(star),
+    bar: [[783.3, 760.2], [1150.7, 760.2]].map(star),
+    s: [[1430.3, 988.9], [1745, 760.2], [1150.7, 760.2], [848.1, 1109.6], [1264.2, 1109.6], [486.2, 1674.8], [669.8, 1109.6]].map(star)
+  };
   var reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   // Tempi delle fasi, in secondi
@@ -114,35 +133,55 @@
     }
     atoms.forEach(function (at) { at.out = at.net.out || []; });
 
-    // 3. Logo: esagono e stella campionati lungo il tratto, nell'ordine della penna
-    var hex = [[50, 4], [89.84, 27], [89.84, 73], [50, 96], [10.16, 73], [10.16, 27]];
-    var star = [[50, 16], [71.16, 81.12], [15.76, 40.88], [84.24, 40.88], [28.84, 81.12]];
-    var nHex = Math.round(N * 276 / 618);
-    var hexPts = sample(hex, nHex), starPts = sample(star, N - nHex);
-    loops = [[], []];
-    hexPts.concat(starPts).forEach(function (p, i) {
-      atoms[i].logo = { x: (p[0] - 50) / 47, y: (p[1] - 50) / 47, z: 0 };
-      loops[i < nHex ? 0 : 1].push(i);
+    // 3. Logo: bullone e tratti della stella, punti distribuiti in proporzione alla lunghezza
+    var strokes = [
+      { pts: hexPts(1085), closed: true, color: SILVER },
+      { pts: LOGO.rest, closed: false, color: SLATE },
+      { pts: LOGO.legs, closed: false, color: WHITE },
+      { pts: LOGO.bar, closed: false, color: WHITE },
+      { pts: LOGO.s, closed: false, color: SILVER }
+    ];
+    var total = 0, given = 0, k = 0;
+    strokes.forEach(function (s) { s.len = polyLen(s.pts, s.closed); total += s.len; });
+    strokes.forEach(function (s) { s.n = Math.max(s.pts.length, Math.round(N * s.len / total)); given += s.n; });
+    strokes[0].n += N - given;   // l'esagono assorbe gli arrotondamenti
+    loops = [];
+    strokes.forEach(function (s) {
+      var idx = [];
+      sample(s.pts, s.n, s.closed).forEach(function (p) {
+        atoms[k].logo = { x: p[0], y: p[1], z: 0 }; idx.push(k); k++;
+      });
+      loops.push({ idx: idx, closed: s.closed, color: s.color });
     });
   }
 
-  // Punti lungo un poligono chiuso: ogni vertice è un punto, così gli angoli restano vivi
-  function sample(poly, n) {
+  function polyLen(pts, closed) {
+    var len = 0, m = closed ? pts.length : pts.length - 1;
+    for (var i = 0; i < m; i++) { var p = pts[i], q = pts[(i + 1) % pts.length]; len += Math.hypot(q[0] - p[0], q[1] - p[1]); }
+    return len;
+  }
+
+  // n punti lungo una spezzata (chiusa o aperta): ogni vertice è un punto, così gli angoli restano vivi
+  function sample(poly, n, closed) {
     var segs = [], total = 0, out = [], given = 0;
-    for (var i = 0; i < poly.length; i++) {
+    var m = closed ? poly.length : poly.length - 1, slots = closed ? n : n - 1;
+    for (var i = 0; i < m; i++) {
       var p = poly[i], q = poly[(i + 1) % poly.length];
       var len = Math.hypot(q[0] - p[0], q[1] - p[1]);
       segs.push({ a: p, b: q, len: len }); total += len;
     }
-    segs.forEach(function (s) { s.exact = n * s.len / total; s.n = Math.max(1, Math.floor(s.exact)); given += s.n; });
+    segs.forEach(function (s) { s.exact = slots * s.len / total; s.n = Math.max(1, Math.floor(s.exact)); given += s.n; });
     segs.slice().sort(function (x, y) { return (y.exact - y.n) - (x.exact - x.n); })
-      .slice(0, Math.max(0, n - given)).forEach(function (s) { s.n++; });
+      .slice(0, Math.max(0, slots - given)).forEach(function (s) { s.n++; });
     segs.forEach(function (s) {
       for (var k = 0; k < s.n; k++) {
         var t = k / s.n;
         out.push([s.a[0] + (s.b[0] - s.a[0]) * t, s.a[1] + (s.b[1] - s.a[1]) * t]);
       }
     });
+    if (!closed) out.push(poly[poly.length - 1]);
+    while (out.length > n) out.pop();
+    while (out.length < n) out.push(out[out.length - 1]);
     return out;
   }
 
@@ -238,6 +277,52 @@
 
   function depth(at) { return clamp01(0.35 + (1 - at.z) * 0.45); }
 
+  /* ---------- Il logo nitido, disegnato con la stessa proiezione degli atomi ---------- */
+  var tP = {};
+  function P(u, v) {
+    var b = 1 + 0.018 * Math.sin(clock * 1.4);
+    tP.x = u * b; tP.y = v * b; tP.z = 0;
+    rotate(tP, tiltY * 0.3, tiltX * 0.45, tP);
+    var f = 3.2 / (3.2 + tP.z);
+    return [cx + tP.x * S * f, cy + tP.y * S * f];
+  }
+  function hexPath(rc, rr) {
+    var v = hexPts(rc), t = rr / rc;
+    ctx.beginPath();
+    for (var i = 0; i < 6; i++) {
+      var p0 = v[(i + 5) % 6], p1 = v[i], p2 = v[(i + 1) % 6];
+      var a = P(p1[0] + (p0[0] - p1[0]) * t, p1[1] + (p0[1] - p1[1]) * t);
+      var c = P(p1[0], p1[1]);
+      var b = P(p1[0] + (p2[0] - p1[0]) * t, p1[1] + (p2[1] - p1[1]) * t);
+      if (i) ctx.lineTo(a[0], a[1]); else ctx.moveTo(a[0], a[1]);
+      ctx.quadraticCurveTo(c[0], c[1], b[0], b[1]);
+    }
+    ctx.closePath();
+  }
+  function seg(pts, color, width) {
+    ctx.beginPath();
+    pts.forEach(function (p, i) { var q = P(p[0], p[1]); if (i) ctx.lineTo(q[0], q[1]); else ctx.moveTo(q[0], q[1]); });
+    ctx.strokeStyle = color; ctx.lineWidth = width; ctx.stroke();
+  }
+  function drawLogo(alpha) {
+    var u = S / LU, w = 46 * 0.9 * u, h = 98 * 0.9 * u;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    // bullone navy con il filo d'argento
+    hexPath(1085, 90);
+    ctx.fillStyle = "#14213D"; ctx.fill();
+    ctx.lineJoin = "round"; ctx.lineWidth = 34 * u; ctx.strokeStyle = "#14213D"; ctx.stroke();
+    hexPath(1010, 78);
+    ctx.lineWidth = Math.max(1, 16 * u); ctx.strokeStyle = "#C3CAD3"; ctx.stroke();
+    // stella: il resto in ardesia, la A bianca, la S d'argento, con gli incroci intrecciati
+    ctx.lineJoin = "miter"; ctx.miterLimit = 4; ctx.lineCap = "butt";
+    seg(LOGO.rest, "#34426B", w);
+    seg(LOGO.legs, "#14213D", h); seg(LOGO.bar, "#14213D", h);
+    seg(LOGO.legs, "#FFFFFF", w); seg(LOGO.bar, "#FFFFFF", w);
+    seg(LOGO.s, "#14213D", h); seg(LOGO.s, "#C3CAD3", w);
+    ctx.restore();
+  }
+
   function draw() {
     var t = clock, fadeIn = clamp01(t / 1.2);
     ctx.clearRect(0, 0, W, H);
@@ -256,14 +341,17 @@
     });
     flush(ICE, 1, .3);
 
-    // tratto del logo: compare dove la penna è già passata
-    loops.forEach(function (loop) {
-      for (var k = 0; k < loop.length; k++) {
-        var A = atoms[loop[k]], B = atoms[loop[(k + 1) % loop.length]];
-        line(A, B, clamp01((Math.min(A.l, B.l) - .88) / .12));
+    // tratto del logo: compare dove la penna è già passata, poi lascia il posto al logo nitido
+    var crisp = clamp01((t - END + 0.3) / 1.2);
+    loops.forEach(function (lp) {
+      var I = lp.idx, L = I.length, m = lp.closed ? L : L - 1;
+      for (var k = 0; k < m; k++) {
+        var A = atoms[I[k]], B = atoms[I[(k + 1) % L]];
+        line(A, B, clamp01((Math.min(A.l, B.l) - .88) / .12) * (1 - crisp));
       }
+      flush(lp.color, narrow ? 1.6 : 2, 1);
     });
-    flush(ICE, narrow ? 1.6 : 2, 1);
+    if (crisp > 0) drawLogo(crisp);
 
     ctx.globalCompositeOperation = "lighter";
 
@@ -271,7 +359,7 @@
     var logoDone = t > END;
     atoms.forEach(function (at) {
       var r = (narrow ? 7 : 8) * at.f * (1 + at.glow * .9) * (1 - at.l * .35);
-      ctx.globalAlpha = fadeIn * (0.5 + 0.5 * depth(at)) * (logoDone ? .75 : 1);
+      ctx.globalAlpha = fadeIn * (0.5 + 0.5 * depth(at)) * (1 - 0.9 * crisp);
       ctx.drawImage(GLOW, at.sx - r, at.sy - r, r * 2, r * 2);
     });
 
@@ -283,14 +371,16 @@
       ctx.drawImage(SPARK, x - r, y - r, r * 2, r * 2);
     });
 
-    // a logo finito, due scintille percorrono il tratto
+    // a logo finito, due scintille percorrono il bullone e la S
     if (logoDone) {
       var k = clamp01((t - END) / 1.5);
       ctx.globalAlpha = k;
-      loops.forEach(function (loop, li) {
-        var pos = ((t - END) * (li ? .09 : .07) + li * .5) % 1 * loop.length;
+      [[0, .06], [4, .1]].forEach(function (cfg, li) {
+        var lp = loops[cfg[0]], I = lp.idx, L = I.length, ph = (t - END) * cfg[1] + li * .5, pos;
+        if (lp.closed) pos = (ph % 1) * L;
+        else { var tri = ph % 2; pos = (tri < 1 ? tri : 2 - tri) * (L - 1) * 0.9999; }
         var i0 = Math.floor(pos), fr = pos - i0;
-        var A = atoms[loop[i0]], B = atoms[loop[(i0 + 1) % loop.length]];
+        var A = atoms[I[i0]], B = atoms[I[lp.closed ? (i0 + 1) % L : Math.min(i0 + 1, L - 1)]];
         var x = A.sx + (B.sx - A.sx) * fr, y = A.sy + (B.sy - A.sy) * fr, r = narrow ? 10 : 12;
         ctx.drawImage(SPARK, x - r, y - r, r * 2, r * 2);
       });

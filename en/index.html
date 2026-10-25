@@ -15,9 +15,16 @@
   <meta property="og:description" content="Antonino Sarullo, materials engineer, graduated from Politecnico di Milano. From atoms to algorithms.">
   <meta property="og:url" content="https://sarulloengineering.com/en/">
   <meta property="og:locale" content="en_GB">
-  <meta name="theme-color" content="#0E1A2B">
+  <meta property="og:image" content="https://sarulloengineering.com/assets/img/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#0B1424">
   <link rel="icon" href="/assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/assets/img/favicon-32.png" sizes="32x32" type="image/png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
   <link rel="preload" href="/assets/fonts/commissioner-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/cormorant-latin-500.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 <body>
@@ -26,8 +33,8 @@
   <header class="site-header">
     <div class="wrap">
       <a class="brand" href="/en/" aria-label="Sarullo Engineering, home">
-        <svg class="logo" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M50 4 L89.84 27 L89.84 73 L50 96 L10.16 73 L10.16 27 Z"/><path d="M50 16 L71.16 81.12 L15.76 40.88 L84.24 40.88 L28.84 81.12 Z"/></svg>
-        <span class="brand__name">Sarullo Engineering</span>
+        <img class="logo" src="/assets/img/logo.svg" alt="" width="44" height="44">
+        <span class="wordmark"><span class="wordmark__name">Sarullo</span><span class="wordmark__sub"><span>E</span><span>N</span><span>G</span><span>I</span><span>N</span><span>E</span><span>E</span><span>R</span><span>I</span><span>N</span><span>G</span></span></span>
       </a>
       <nav class="site-nav" aria-label="Sections">
         <ul>
@@ -65,8 +72,9 @@
             <p>My engineering training gave me a method I apply to everything, from work to everyday life: <strong>observe, rationalise, decide</strong>.</p>
             <p>I like to understand things in depth, starting from their structure, and to find the simplest way to make them work better.</p>
           </div>
-          <!-- Ritratto: sostituire il logo con <img src="/assets/img/foto.jpg" alt="Antonino Sarullo" width="384" height="443"> -->
-          <figure class="portrait" aria-hidden="true"><svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M50 4 L89.84 27 L89.84 73 L50 96 L10.16 73 L10.16 27 Z"/><path d="M50 16 L71.16 81.12 L15.76 40.88 L84.24 40.88 L28.84 81.12 Z"/></svg></figure>
+          <!-- Ritratto: quando c'è la foto, togliere la classe portrait--logo e usare
+               <img src="/assets/img/foto.jpg" alt="Antonino Sarullo" width="384" height="443"> -->
+          <figure class="portrait portrait--logo" aria-hidden="true"><img src="/assets/img/logo.svg" alt="" width="192" height="192"></figure>
         </div>
       </div>
     </section>
@@ -115,7 +123,7 @@
 
   <footer class="site-footer">
     <div class="wrap">
-      <svg class="logo" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" aria-hidden="true"><path d="M50 4 L89.84 27 L89.84 73 L50 96 L10.16 73 L10.16 27 Z"/><path d="M50 16 L71.16 81.12 L15.76 40.88 L84.24 40.88 L28.84 81.12 Z"/></svg>
+      <img class="logo" src="/assets/img/logo.svg" alt="" width="24" height="24">
       <p>&copy; <span data-year>2026</span> Sarullo Engineering</p>
       <!-- TODO: inserire la Partita IVA (obbligatoria sul sito se presente) -->
       <p><a href="/en/privacy.html">Privacy</a></p>

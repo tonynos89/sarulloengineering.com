@@ -23,8 +23,9 @@ Il sito è scritto a mano in HTML, CSS e JavaScript puri: nessun framework, ness
     ├── css/style.css   Unico foglio di stile per tutte le pagine
     ├── js/main.js      Lingua scelta, anno nel footer
     ├── js/lattice.js   Animazione dell'hero: reticolo → rete neurale → logo (canvas, senza librerie)
-    ├── fonts/          Commissioner (latino + cirillico), ospitato sul sito, licenza OFL
-    └── img/            logo.svg, favicon.svg
+    ├── fonts/          Commissioner (testi) e Cormorant Garamond (marchio e titoli), latino + cirillico, licenza OFL
+    └── img/            logo.svg (principale), logo-negativo.svg, favicon.svg/png, apple-touch-icon.png, og-image.png
+brand/                  Il marchio da scaricare: SVG e PNG 2000 px (principale, positivo, monocromo, negativo)
 ```
 
 ## Regole di lavoro
@@ -50,11 +51,22 @@ Il sito è scritto a mano in HTML, CSS e JavaScript puri: nessun framework, ness
 
 ## Da completare
 
-- [ ] Partita IVA nel footer delle tre home (obbligatoria se presente) — cercare `TODO`
+- [ ] Partita IVA nel footer delle tre home, quando ci sarà — cercare `TODO`
 - [ ] Link al profilo LinkedIn nella sezione contatti — cercare `TODO`
 - [ ] Attivare la casella `antonino@sarulloengineering.com`
-- [ ] Rifinire il logo: la stella in un solo tratto deve suggerire la A e la S
 - [ ] Far rileggere i testi russi da un madrelingua
 - [ ] Far verificare l'informativa privacy
-- [ ] Immagine di anteprima per i social (`og:image`, 1200×630)
 - [ ] Foto per la sezione "Chi sono": salvarla come `assets/img/foto.jpg` e sostituire il logo nella `figure.portrait` delle tre home (istruzione nel commento HTML)
+
+## Il marchio
+
+| Variante | File | Quando usarla |
+| --- | --- | --- |
+| Filo d'argento (principale) | `brand/logo.svg` | Ovunque: sito, documenti, LinkedIn. Va su fondo chiaro e scuro |
+| Positivo | `brand/logo-positivo.svg` | Fondo bianco, carta intestata |
+| Monocromo | `brand/logo-monocromo.svg` | Stampa a un colore, incisioni, timbri |
+| Negativo | `brand/logo-negativo.svg` | Fondi navy o scuri (retro del biglietto, icona iPhone) |
+| Essenziale | `assets/img/favicon.svg` | Solo A e S: icona del browser e misure piccolissime |
+
+Colori: navy `#14213D`, argento `#C3CAD3`, ardesia `#34426B`, fondo del sito `#0B1424`.
+Caratteri: Cormorant Garamond per il marchio e i titoli, Commissioner per i testi.
