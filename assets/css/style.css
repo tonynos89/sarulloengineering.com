@@ -219,6 +219,9 @@ strong { font-weight: 560; color: var(--frost); }
 }
 .contact__mail:hover { border-bottom-color: var(--silver); }
 .contact__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .5rem 2rem; color: var(--mist); }
+.contact__link { display: inline-flex; align-items: center; gap: .5rem; color: var(--frost); text-decoration: none; border-bottom: 1px solid transparent; }
+.contact__link:hover { border-bottom-color: var(--silver); }
+.contact__icon { flex: none; }
 
 /* ---------- Footer ---------- */
 .site-footer { background: var(--night); color: var(--mist); font-size: var(--fs-small); border-top: 1px solid var(--line); }
